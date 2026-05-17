@@ -1,33 +1,47 @@
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
-        if(strs.length == 0){
-            return new ArrayList();
+
+        List<List<String>> result = new ArrayList<>();
+
+        boolean[] visited = new boolean[strs.length];
+
+        for(int i=0; i<strs.length; i++){
+            if(visited[i]){
+                continue;
+            }
+
+            List<String> group = new ArrayList<>();
+            group.add(strs[i]);
+            visited[i] = true;
+
+            for(int j=i+1; j<strs.length; j++){
+                if(!visited[j] && isAnagram(strs[i],strs[j])){
+                    group.add(strs[j]);
+                    visited[j] = true;
+                }
+            }
+
+            result.add(group);
+
         }
 
-        Map<String,List> ansMap = new HashMap<>();
+        return result;
+    }
 
-        int[] count = new int[26];
+        public boolean isAnagram(String s, String t){
 
-        for(String s : strs){
-            Arrays.fill(count,0);
-            for(char c : s.toCharArray()){
-                count[c - 'a']++;
+            if(s.length() != t.length()){
+                return false;
             }
 
-            StringBuilder sb = new StringBuilder(" ");
+            char[] arr1 = s.toCharArray();
+            char[] arr2 = t.toCharArray();
 
-            for(int i=0; i<26; i++){
-                sb.append("#");
-                sb.append(count[i]);
-            }
+            Arrays.sort(arr1);
+            Arrays.sort(arr2);
 
-            String key = sb.toString();
-            if(!ansMap.containsKey(key)){
-                ansMap.put(key, new ArrayList());
-            }
-            ansMap.get(key).add(s);
-        }
-        return new ArrayList(ansMap.values());
+            return Arrays.equals(arr1, arr2);
+            
         
     }
 }
