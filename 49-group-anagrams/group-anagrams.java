@@ -1,47 +1,23 @@
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String, List<String>> map = new HashMap<>();
 
-        List<List<String>> result = new ArrayList<>();
+        for(String str : strs) {
 
-        boolean[] visited = new boolean[strs.length];
+            char[] arr = str.toCharArray();
 
-        for(int i=0; i<strs.length; i++){
-            if(visited[i]){
-                continue;
+            Arrays.sort(arr);
+
+            String sorted = new String(arr);
+
+            if(!map.containsKey(sorted)) {
+                map.put(sorted, new ArrayList<>());
             }
 
-            List<String> group = new ArrayList<>();
-            group.add(strs[i]);
-            visited[i] = true;
-
-            for(int j=i+1; j<strs.length; j++){
-                if(!visited[j] && isAnagram(strs[i],strs[j])){
-                    group.add(strs[j]);
-                    visited[j] = true;
-                }
-            }
-
-            result.add(group);
-
+            map.get(sorted).add(str);
         }
 
-        return result;
-    }
-
-        public boolean isAnagram(String s, String t){
-
-            if(s.length() != t.length()){
-                return false;
-            }
-
-            char[] arr1 = s.toCharArray();
-            char[] arr2 = t.toCharArray();
-
-            Arrays.sort(arr1);
-            Arrays.sort(arr2);
-
-            return Arrays.equals(arr1, arr2);
-            
-        
+        return new ArrayList<>(map.values());
     }
 }
+    
