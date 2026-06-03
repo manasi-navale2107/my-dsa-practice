@@ -1,55 +1,60 @@
 class Solution {
-     public List<String> fullJustify(String[] words, int maxWidth) {
-        List<String> result = new ArrayList<>();
-        int n = words.length;
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> lines = new ArrayList<>();
+
         int index = 0;
 
-        while (index < n) {
-            int totalChars = words[index].length();
+        while (index < words.length) {
+            int count = words[index].length();
             int last = index + 1;
 
-           
-            while (last < n) {
-                if (totalChars + 1 + words[last].length() > maxWidth) break;
-                totalChars += 1 + words[last].length();
+            while (last < words.length) {
+                if (count + 1 + words[last].length() > maxWidth) {
+                    break;
+                }
+                count += 1 + words[last].length();
                 last++;
             }
 
-            StringBuilder sb = new StringBuilder();
-            int diff = last - index - 1; 
+            StringBuilder builder = new StringBuilder();
+            builder.append(words[index]);
 
-            
-            if (last == n || diff == 0) {
-                for (int i = index; i < last; i++) {
-                    sb.append(words[i]);
-                    if (i < last - 1) {
-                        sb.append(" ");
-                    }
+            int diff = last - index - 1;
+
+            // last line OR only one word
+            if (last == words.length || diff == 0) {
+                for (int i = index + 1; i < last; i++) {
+                    builder.append(" ");
+                    builder.append(words[i]);
                 }
-                int remainingSpaces = maxWidth - sb.length();
-                appendSpaces(sb, remainingSpaces);
-            } else {
-                int spaces = (maxWidth - totalChars) / diff;
-                int extraSpaces = (maxWidth - totalChars) % diff;
 
-                for (int i = index; i < last; i++) {
-                    sb.append(words[i]);
-                    if (i < last - 1) {
-                        int spacesToApply = spaces + (i - index < extraSpaces ? 1 : 0);
-                        appendSpaces(sb, spacesToApply + 1); 
+                while (builder.length() < maxWidth) {
+                    builder.append(" ");
+                }
+            } 
+            else {
+                int totalSpaces = maxWidth - count + diff;
+                int spaces = totalSpaces / diff;
+                int extraSpaces = totalSpaces % diff;
+
+                for (int i = index + 1; i < last; i++) {
+                    for (int s = 0; s < spaces; s++) {
+                        builder.append(" ");
                     }
+
+                    if (extraSpaces > 0) {
+                        builder.append(" ");
+                        extraSpaces--;
+                    }
+
+                    builder.append(words[i]);
                 }
             }
-            result.add(sb.toString());
+
+            lines.add(builder.toString());
             index = last;
         }
 
-        return result;
-    }
-
-    private void appendSpaces(StringBuilder sb, int count) {
-        for (int i = 0; i < count; i++) {
-            sb.append(" ");
-        }
+        return lines;
     }
 }
