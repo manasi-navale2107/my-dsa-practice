@@ -1,41 +1,57 @@
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        
+
+        // Always perform binary search on the smaller array
         if (nums1.length > nums2.length) {
             return findMedianSortedArrays(nums2, nums1);
         }
 
-        int m = nums1.length;
-        int n = nums2.length;
+        int x = nums1.length;
+        int y = nums2.length;
 
-        int low = 0;
-        int high = m;
+        int start = 0;
+        int end = x;
 
-        while (low <= high) {
-            int cut1 = (low + high) / 2;
-            int cut2 = (m + n + 1) / 2 - cut1;
+        while (start <= end) {
 
-            int left1 = (cut1 == 0) ? Integer.MIN_VALUE : nums1[cut1 - 1];
-            int left2 = (cut2 == 0) ? Integer.MIN_VALUE : nums2[cut2 - 1];
+            int partX = (start + end) / 2;
+            int partY = (x + y + 1) / 2 - partX;
 
-            int right1 = (cut1 == m) ? Integer.MAX_VALUE : nums1[cut1];
-            int right2 = (cut2 == n) ? Integer.MAX_VALUE : nums2[cut2];
+            int xLeft = (partX == 0)
+                    ? Integer.MIN_VALUE
+                    : nums1[partX - 1];
 
-            if (left1 <= right2 && left2 <= right1) {
-                if ((m + n) % 2 == 0) {
-                    return (
-                        Math.max(left1, left2) + 
-                        Math.min(right1, right2)
-                    ) / 2.0;
+            int xRight = (partX == x)
+                    ? Integer.MAX_VALUE
+                    : nums1[partX];
+
+            int yLeft = (partY == 0)
+                    ? Integer.MIN_VALUE
+                    : nums2[partY - 1];
+
+            int yRight = (partY == y)
+                    ? Integer.MAX_VALUE
+                    : nums2[partY];
+
+            // Correct partition found
+            if (xLeft <= yRight && yLeft <= xRight) {
+
+                if ((x + y) % 2 == 0) {
+                    return ((double) Math.max(xLeft, yLeft)
+                            + Math.min(xRight, yRight)) / 2;
                 } else {
-                    return Math.max(left1, left2);
+                    return Math.max(xLeft, yLeft);
                 }
-            } 
-            else if (left1 > right2) {
-                high = cut1 - 1;
-            } 
+            }
+
+            // Move towards left in nums1
+            else if (xLeft > yRight) {
+                end = partX - 1;
+            }
+
+            // Move towards right in nums1
             else {
-                low = cut1 + 1;
+                start = partX + 1;
             }
         }
 
