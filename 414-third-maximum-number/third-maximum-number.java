@@ -1,31 +1,35 @@
 class Solution {
-    public int thirdMax(int[] nums) {
-        // Use Long so we can handle Integer.MIN_VALUE safely
-        Long first = null, second = null, third = null;
+    public int thirdMax(int[] arr) {
+        
+        long first = Long.MIN_VALUE;
+        long second = Long.MIN_VALUE;
+        long third = Long.MIN_VALUE;
 
-        for (int num : nums) {
-            long n = num;
-
-            // Skip duplicates
-            if ((first != null && n == first) ||
-                (second != null && n == second) ||
-                (third != null && n == third)) {
+        for(int num : arr){
+            if(num == first || num == second || num == third){
                 continue;
             }
 
-            if (first == null || n > first) {
+            if(num > first){
                 third = second;
                 second = first;
-                first = n;
-            } else if (second == null || n > second) {
+                first = num;
+            }
+
+            else if(num > second){
                 third = second;
-                second = n;
-            } else if (third == null || n > third) {
-                third = n;
+                second = num;
+            }
+
+            else if(num > third){
+                third = num;
             }
         }
 
-        // If 3rd maximum does not exist, return maximum (first)
-        return (third == null) ? first.intValue() : third.intValue();
+        if(third == Long.MIN_VALUE){
+            return (int)first;
+        }
+
+        return (int)third;
     }
 }
