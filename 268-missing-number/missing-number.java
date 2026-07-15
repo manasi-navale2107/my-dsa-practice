@@ -1,23 +1,24 @@
 class Solution {
     public int missingNumber(int[] nums) {
-        int i = 0;
-        while (i < nums.length) {
-            int correct = nums[i];  // Correct index for nums[i]
-            if (nums[i] < nums.length && nums[i] != nums[correct]) {
-                int temp = nums[i];
-                nums[i] = nums[correct];
-                nums[correct] = temp;
-            } else {
-                i++;
+
+        int n = nums.length;
+
+        for (int i = 0; i <= n; i++) {
+
+            boolean found = false;
+
+            for (int num : nums) {
+
+                if (num == i) {
+                    found = true;
+                    break;
+                }
             }
+
+            if (!found)
+                return i;
         }
 
-        // Find the missing number
-        for (int index = 0; index < nums.length; index++) {
-            if (nums[index] != index) {
-                return index;
-            }
-        }
-        return nums.length;
+        return -1;
     }
 }
