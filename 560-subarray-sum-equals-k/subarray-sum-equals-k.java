@@ -1,32 +1,25 @@
-import java.util.*;
-
 class Solution {
-    public int subarraySum(int[] arr, int k) {
-        int n = arr.length;
-        int count = 0;
-        int[] prefixSum = new int[n];
-
-        prefixSum[0] = arr[0];
-
-        for (int i = 1; i < n; i++) {
-            prefixSum[i] = prefixSum[i - 1] + arr[i];
-        }
-
+    public int subarraySum(int[] nums, int k) {
         HashMap<Integer, Integer> map = new HashMap<>();
 
-        for (int j = 0; j < n; j++) {
+        map.put(0,1);
 
-            if (prefixSum[j] == k) count++;
+        int count = 0;
+        int prefixSum = 0;
 
-            int val = prefixSum[j] - k;
+        for(int num: nums){
+            prefixSum +=num;
 
-            if (map.containsKey(val)) {
-                count += map.get(val);
+            int requiredSum = prefixSum - k;
+
+            if(map.containsKey(requiredSum)){
+                count += map.get(requiredSum);
             }
 
-            map.put(prefixSum[j], map.getOrDefault(prefixSum[j], 0) + 1);
+            map.put(prefixSum,map.getOrDefault(prefixSum,0)+1);
         }
 
         return count;
+        
     }
 }
